@@ -42,7 +42,7 @@
                 });
         }
 
-	const apiURL = `https://api.github.com/repos/${repoName}/contents/blog`;
+	const apiURL = `https://api.github.com/repos/REPONAME/contents/blog`;
         fetch(apiURL)
             .then(response => response.json())
             .then(files => {
