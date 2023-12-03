@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog</title>
+    <style>
+        .container {
+            display: flex;
+        }
+        .nav-drawer {
+            width: 200px;
+            border-right: 1px solid #ddd;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 10px;
+        }
+        li {
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-drawer" id="navDrawer">
+        </div>
+        <div class="main-content" id="mainContent">
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
+    <script>
+        function fetchAndRenderMarkdown(url) {
+            fetch(url)
+                .then(response => response.text())
+                .then(text => {
+                    const converter = new showdown.Converter();
+                    const html = converter.makeHtml(text);
+                    document.getElementById('mainContent').innerHTML = html;
+                });
+        }
+
+	const apiURL = `https://api.github.com/repos/${repoName}/contents/blog`;
+        fetch(apiURL)
+            .then(response => response.json())
+            .then(files => {
+                const navDrawer = document.getElementById('navDrawer');
+                files.forEach(file => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = file.name;
+                    listItem.onclick = () => fetchAndRenderMarkdown(file.download_url);
+                    navDrawer.appendChild(listItem);
+                });
+            });
+    </script>
+</body>
+</html>
+
