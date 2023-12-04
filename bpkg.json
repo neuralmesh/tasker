@@ -1,7 +1,0 @@
-{
-  "name": "llmos",
-  "version": "1.0.0",
-  "description": "project losllamaos",
-  "scripts": [ "llmos.sh" ]
-}
-
