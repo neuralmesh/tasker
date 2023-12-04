@@ -1,8 +1,38 @@
-# paper
-the ultimate adhd project
+# llmos
 
-you can just add ultra optimized functions and then we will add them to the graph
+project losllamaos
 
-another focus is to build a search engine for your ultra specialized model
+designed with best intentions
 
-its like a nieche finder but also finds the simplest possible solution
+```bash
+#!/bin/bash
+
+# Name of the Docker image
+IMAGE_NAME="my-bash-env"
+
+# Create Dockerfile
+cat <<EOF > Dockerfile
+FROM alpine
+RUN apk add --no-cache bash
+COPY ./scripts /scripts
+WORKDIR /scripts
+ENTRYPOINT ["/bin/bash"]
+EOF
+
+# Build Docker image
+docker build -t $IMAGE_NAME .
+
+# Run Docker container
+docker run -it $IMAGE_NAME
+```
+
+```markdown
+{
+  "name": "losllamaos",
+  "version": "1.0.0",
+  "description": "Docker-based isolated Bash environment setup script",
+  "scripts": [ "llmos.sh" ]
+}
+
+```
+
