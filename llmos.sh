@@ -1,20 +1,15 @@
 #!/bin/bash
 
-# Name of the Docker image
 IMAGE_NAME="llmos"
+HOST_PORT=4000
+CONTAINER_PORT=4000
 
-# Create Dockerfile
-cat <<EOF > Dockerfile
-FROM alpine
-RUN apk add --no-cache bash
-COPY ./scripts /scripts
-WORKDIR /scripts
-ENTRYPOINT ["/bin/bash"]
-EOF
-
-# Build Docker image
 docker build -t $IMAGE_NAME .
+CONTAINER_ID=$(docker run -d -p $HOST_PORT:$CONTAINER_PORT $IMAGE_NAME)
 
-# Run Docker container
-docker run -it $IMAGE_NAME
+while [ "$(docker inspect --format='{{.State.Running}}' $CONTAINER_ID)" != "true" ]; do
+    sleep 1
+done
+
+docker exec -it $CONTAINER_ID /bin/sh
 
