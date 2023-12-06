@@ -1,29 +1,32 @@
 #!/bin/bash
 
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <git-repo-url>"
+# Usage check and argument assignment
+if [ "$#" -lt 3 ]; then
+    echo "Usage: $0 <git-repo-url> <image-name> <port-mappings>"
     exit 1
 fi
-
 REPO_URL=$1
+IMAGE_NAME=$2
+PORT_MAPPINGS=${@:3}
 
-IMAGE_NAME="llmos"
-PORT_EXTERN=4000
-PORT_INTERN=4000
+# Create Dockerfile
+cat <<EOF > Dockerfile
+FROM node:alpine
+RUN apk add --no-cache git
 
-docker build --build-arg REPO_URL=$REPO_URL -t $IMAGE_NAME .
+# Adding a variable that changes on every build to ensure the git clone is not cached
+ARG CACHEBUST=$(date +%s)
+RUN echo "Cache bust: \$CACHEBUST" && git clone $REPO_URL /app
 
-CONTAINER_USING_PORT=$(docker ps --filter "publish=$PORT_EXTERN" -q)
-if [ ! -z "$CONTAINER_USING_PORT" ]; then
-    docker stop $CONTAINER_USING_PORT
-    docker rm $CONTAINER_USING_PORT
-fi
+WORKDIR /app
+ENTRYPOINT ["./entrypoint.sh"]
+EOF
 
-CONTAINER_ID=$(docker run -d -p $PORT_EXTERN:$PORT_INTERN $IMAGE_NAME)
-
-while [ "$(docker inspect --format='{{.State.Running}}' $CONTAINER_ID)" != "true" ]; do
-    sleep 1
+for PORT in $PORT_MAPPINGS; do
+    echo "EXPOSE $PORT" >> Dockerfile
 done
 
-docker exec -it $CONTAINER_ID /bin/sh
+# Build and run Docker container
+docker build -t $IMAGE_NAME .
+docker run -d $(echo $PORT_MAPPINGS | sed 's/ / -p /g' | xargs echo -p) $IMAGE_NAME
 
