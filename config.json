@@ -1,0 +1,11 @@
+{
+  "NAME": "tasker",
+  "REPO_URL": "https://github.com/neuralmesh/tasker",
+  "PORT_MAPPINGS":
+    [
+      {
+        "PORT_EXTERN": 4000,
+        "PORT_INTERN": 4000
+      }
+    ]
+}

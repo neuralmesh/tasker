@@ -1,5 +1,0 @@
-name: "hub"
-port_extern: 4000
-port_intern: 4000
-repo_url: "https://github.com/neuralmesh/gitea.git"
-
