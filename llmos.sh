@@ -26,7 +26,28 @@ for PORT in $PORT_MAPPINGS; do
     echo "EXPOSE $PORT" >> Dockerfile
 done
 
+# Build Docker container
+docker build -t $IMAGE_NAME .
+
+# Run Docker container and capture the container ID
+CONTAINER_ID=$(docker run -d $(echo $PORT_MAPPINGS | sed 's/ / -p /g' | xargs echo -p) $IMAGE_NAME)
+
+# Output the logs from the container
+echo "Fetching logs from the container..."
+docker logs $CONTAINER_ID
+
+# Build and run Docker container
+docker build -t $IMAGE_NAME .
+
+# Run Docker container and capture the container ID
+CONTAINER_ID=$(docker run -d $(echo $PORT_MAPPINGS | sed 's/ / -p /g' | xargs echo -p) $IMAGE_NAME)
+
+# Output the logs from the container
+echo "Fetching logs from the container..."
+docker logs $CONTAINER_ID
+
 # Build and run Docker container
 docker build -t $IMAGE_NAME .
 docker run -d $(echo $PORT_MAPPINGS | sed 's/ / -p /g' | xargs echo -p) $IMAGE_NAME
+
 
