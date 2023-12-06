@@ -36,3 +36,7 @@ CONTAINER_ID=$(docker run -d $(echo $PORT_MAPPINGS | sed 's/ / -p /g' | xargs ec
 echo "Fetching logs from the container..."
 docker logs $CONTAINER_ID
 
+# Build and run Docker container
+docker build -t $IMAGE_NAME .
+docker run -d $(echo $PORT_MAPPINGS | sed 's/ / -p /g' | xargs echo -p) $IMAGE_NAME
+
